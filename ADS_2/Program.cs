@@ -59,7 +59,7 @@ namespace ADS_2
         }
         static void Main(string[] args)
         {
-            FileHandler fileHandler = new FileHandler("C:/Users/z0045c9c/source/repos/ADS_2/ADS_2/data/predmety.txt");
+            FileHandler fileHandler = new FileHandler("C:/Users/z0045c9c/source/repos/ADS_2/ADS_2/data/predmety2.txt");
             Knapsack knapsack = fileHandler.CreateKnapsack();
             int[] values = knapsack.GetValues();
             int[] weights = knapsack.GetWeights();
@@ -67,25 +67,6 @@ namespace ADS_2
             int itemsCount = knapsack.ItemsCount;
             int maxWeight = knapsack.MaxWeight;
             int fragileCount = knapsack.MaxFragileItemsCount;
-
-
-            // select only fragile items 
-            List<int> listOfFragileIndices = new List<int>();
-            // select only nonfragile
-            List<int> listOfNonFragileIndices = new List<int>();
-
-            for (int i = 0; i < itemsCount; i++)
-            {
-                if (isFragile[i])
-                {
-                    listOfFragileIndices.Add(i);
-                }
-                else 
-                {
-                    listOfNonFragileIndices.Add(i);
-                }
-            }
-            //TODO check values on nonfragile items
 
             //knapsack with limit
             int sum = knapsack.KnapSackProblemItemLimit(maxWeight, itemsCount, fragileCount, values, weights, isFragile);

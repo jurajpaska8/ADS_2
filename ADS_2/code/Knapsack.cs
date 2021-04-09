@@ -303,18 +303,60 @@ namespace ADS_2.data
                     }
                 }
             }
-            // max fragile
-            int maxFrag = 0;
-            for (int i = 0; i <= fragileCount; i++)
+
+            LinkedList<int> itemIndices = new LinkedList<int>();
+            int selWeight = 0;
+            int w = W;
+            int row = n;
+            int f = fragileCount;
+
+            // find items 
+            while (true)
             {
-                for (int j = 0; j <= n; j++)
+                int val = arr[f][row][w];
+                while (true)
                 {
-                    for (int k = 0; k <= W; k++)
+                    if (row == 0)
                     {
-                        if (fragileArr[i][j][k] > maxFrag) maxFrag = fragileArr[i][j][k];
+                        break;
                     }
+                    if (arr[f][row][w] == arr[f][row - 1][w])
+                    {
+                        row--;
+                    }
+                    else
+                    {
+                        itemIndices.AddLast(row - 1);
+                        selWeight = weights[row - 1];
+                        if (isFragile[row - 1]) f--;
+                        w -= selWeight;
+                        row--;
+                        break;
+                    }
+
+                }
+
+                if (row == 0)
+                {
+                    break;
+                }
+
+            }
+
+            // control
+            int weightSum = 0;
+            int valueSum = 0;
+            int fragileCountControl = 0;
+            foreach(int item in itemIndices)
+            {
+                weightSum += weights[item];
+                valueSum += values[item];
+                if (isFragile[item])
+                {
+                    fragileCountControl++;
                 }
             }
+
             return arr[fragileCount][n][W];
         }
     }

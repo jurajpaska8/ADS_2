@@ -264,12 +264,12 @@ namespace ADS_2.data
                             if (!isFragile[y - 1])
                             {
                                 arr[z][y][x] = Math.Max(arr[z][y - 1][x],
-                                                        arr[z - 1][y - 1][x - weights[y - 1]] + values[y - 1]);
+                                                        arr[z][y - 1][x - weights[y - 1]] + values[y - 1]);
 
                                 // increment counters
-                                if ((arr[z - 1][y - 1][x - weights[y - 1]] + values[y - 1]) > arr[z][y - 1][x])
+                                if ((arr[z][y - 1][x - weights[y - 1]] + values[y - 1]) > arr[z][y - 1][x])
                                 {
-                                    nonFragileArr[z][y][x] = nonFragileArr[z - 1][y - 1][x - weights[y - 1]] + 1;
+                                    nonFragileArr[z][y][x] = nonFragileArr[z][y - 1][x - weights[y - 1]] + 1;
                                 }
                                 else
                                 {
@@ -282,20 +282,13 @@ namespace ADS_2.data
                             // if item is fragile 
                             else
                             {
-                                int currentFragileCount = fragileArr[z - 1][y - 1][x];
-                                if (currentFragileCount >= z)
-                                {
-                                    arr[z][y][x] = arr[z][y - 1][x];
-                                }
-                                else
-                                {
-                                    arr[z][y][x] = Math.Max(arr[z][y - 1][x],
+                                // int currentFragileCount = fragileArr[z - 1][y - 1][x];
+                                arr[z][y][x] = Math.Max(arr[z][y - 1][x],
                                                             arr[z - 1][y - 1][x - weights[y - 1]] + values[y - 1]);
-                                }
 
 
                                 // increment counters
-                                if ((arr[z - 1][y - 1][x - weights[y - 1]] + values[y - 1]) > arr[z][y - 1][x] && currentFragileCount < 10)
+                                if ((arr[z - 1][y - 1][x - weights[y - 1]] + values[y - 1]) > arr[z][y - 1][x])
                                 {
                                     fragileArr[z][y][x] = fragileArr[z - 1][y - 1][x - weights[y - 1]] + 1;
                                 }

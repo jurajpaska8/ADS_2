@@ -59,7 +59,7 @@ namespace ADS_2
         }
         static void Main(string[] args)
         {
-            FileHandler fileHandler = new FileHandler("C:/Users/z0045c9c/source/repos/ADS_2/ADS_2/data/predmetySpravne.txt");
+            FileHandler fileHandler = new FileHandler("C:/Users/z0045c9c/source/repos/ADS_2/ADS_2/data/predmety.txt");
             Knapsack knapsack = fileHandler.CreateKnapsack();
             int[] values = knapsack.GetValues();
             int[] weights = knapsack.GetWeights();

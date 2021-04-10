@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
 
 namespace ADS_2.data
 {
@@ -14,7 +14,7 @@ namespace ADS_2.data
 
         private string[] ReadLines()
         {
-            string[] lines = System.IO.File.ReadAllLines(Path);
+            string[] lines = File.ReadAllLines(Path);
             return lines;
         }
 
@@ -34,6 +34,18 @@ namespace ADS_2.data
             }
             
             return new Knapsack(itemsCount, maxWeight, maxFragileItemsCount, arrayItems);
+        }
+
+        public static void WriteItemsIntoFile(string fileName, int value, LinkedList<int> items)
+        {
+            LinkedList<string> stringToWrite = new LinkedList<string>();
+            stringToWrite.AddLast(value.ToString());
+            stringToWrite.AddLast(items.Count.ToString());
+            foreach(int id in items)
+            {
+                stringToWrite.AddLast(id.ToString());
+            }
+            File.WriteAllLines(fileName, stringToWrite);
         }
     }
 }

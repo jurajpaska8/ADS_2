@@ -65,113 +65,6 @@ namespace ADS_2.data
             return arr[n,W];
         }
 
-        public int KnapSackProblemItemLimitAttempt1(int W, int n, int count, int[] values, int[] weights, bool[] isFragile)
-        {
-            // 3 dim. matrix with zeros 
-            int[][][] arr = new int[count + 1][][];
-            int[][][] fragileArr = new int[count + 1][][];
-            int[][][] nonFragileArr = new int[count + 1][][];
-            for (int i = 0; i < arr.Length; i++)
-            {
-                arr[i] = new int[n + 1][];
-                fragileArr[i] = new int[n + 1][];
-                nonFragileArr[i] = new int[n + 1][];
-
-                for (int j = 0; j < arr[i].Length; j++)
-                {
-                    arr[i][j] = new int[W + 1];
-                    fragileArr[i][j] = new int[W + 1];
-                    nonFragileArr[i][j] = new int[W + 1];
-                }
-            }
-
-            // construct table
-            for (int z = 0; z <= count; z++)
-            {
-                for (int y = 0; y <= n; y++)
-                {
-                    for (int x = 0; x <= W; x++)
-                    {
-                        // first row and first column with zeros
-                        if (x == 0 || y == 0 || z == 0)
-                        {
-                            arr[z][y][x] = 0;
-                        }
-                        // if we can not take item due to its weight
-                        else if (weights[y - 1] > x)
-                        {
-                            arr[z][y][x] = arr[z][y - 1][x];
-                            fragileArr[z][y][x] = fragileArr[z][y - 1][x];
-                            nonFragileArr[z][y][x] = nonFragileArr[z][y - 1][x];
-
-                        }
-                        // else we choose maximum with/without selecting item
-                        else
-                        {
-                            if (!isFragile[y - 1])
-                            {
-                                arr[z][y][x] = Math.Max(arr[z][y - 1][x],
-                                                        arr[z - 1][y - 1][x - weights[y - 1]] + values[y - 1]);
-
-                                // increment counters
-                                if ((arr[z - 1][y - 1][x - weights[y - 1]] + values[y - 1]) > arr[z][y - 1][x])
-                                {
-                                    nonFragileArr[z][y][x] = nonFragileArr[z - 1][y - 1][x - weights[y - 1]] + 1;
-                                }
-                                else
-                                {
-                                    nonFragileArr[z][y][x] = nonFragileArr[z][y - 1][x];
-                                }
-                                fragileArr[z][y][x] = fragileArr[z][y - 1][x];
-
-                            }
-                            
-                            // if item is fragile 
-                            else
-                            {
-                                int currentFragileCount = fragileArr[z][y - 1][x];
-                                if (currentFragileCount >= 10)
-                                {
-                                    arr[z][y][x] = arr[z][y - 1][x];
-                                }
-                                else
-                                {
-                                    arr[z][y][x] = Math.Max(arr[z][y - 1][x],
-                                                            arr[z - 1][y - 1][x - weights[y - 1]] + values[y - 1]);
-                                }
-
-
-                                // increment counters
-                                if ((arr[z - 1][y - 1][x - weights[y - 1]] + values[y - 1]) > arr[z][y - 1][x] && currentFragileCount < 10)
-                                {
-                                    fragileArr[z][y][x] = fragileArr[z - 1][y - 1][x - weights[y - 1]] + 1;
-                                }
-                                else
-                                {
-                                    fragileArr[z][y][x] = fragileArr[z][y - 1][x];
-                                }
-                                nonFragileArr[z][y][x] = nonFragileArr[z][y - 1][x];
-
-                            }
-                        }
-                    }
-                }
-            }
-            // max fragile
-            int maxFrag = 0;
-            for (int i = 0; i <= count; i++)
-            {
-                for (int j = 0; j <= n; j++)
-                {
-                    for (int k = 0; k <= W; k++)
-                    {
-                        if (fragileArr[i][j][k] > maxFrag) maxFrag = fragileArr[i][j][k];
-                    }
-                }
-            }
-            return arr[count][n][W];
-        }
-
         public int KnapSackProblemItemLimit(int W, int n, int fragileCount, int[] values, int[] weights, bool[] isFragile)
         {
             // 3 dim. matrix with zeros 
@@ -328,6 +221,8 @@ namespace ADS_2.data
                     {
                         itemIndices.AddLast(row - 1);
                         selWeight = weights[row - 1];
+
+                        // if item is fragile, then move into knapsack with lower fragility
                         if (isFragile[row - 1]) f--;
                         w -= selWeight;
                         row--;
@@ -343,7 +238,7 @@ namespace ADS_2.data
 
             }
 
-            // control
+            // check 
             int weightSum = 0;
             int valueSum = 0;
             int fragileCountControl = 0;
@@ -356,6 +251,9 @@ namespace ADS_2.data
                     fragileCountControl++;
                 }
             }
+
+            //write into file
+            FileHandler.WriteItemsIntoFile("C:/Users/z0045c9c/source/repos/ADS_2/ADS_2/data/" + "myOut.txt", arr[fragileCount][n][W], itemIndices);
 
             return arr[fragileCount][n][W];
         }
